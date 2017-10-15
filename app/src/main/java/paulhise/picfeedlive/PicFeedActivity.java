@@ -30,48 +30,42 @@ public class PicFeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
 
+        //need to give it the ArrayList<FeedItem> that is constructed from all the FeedItem's
         setupFeedListView();
     }
 
-    private void setupFeedListView(){
-
+    // method that puts all the FeedItem's into the feedListView
+    private void setupFeedListView(ArrayList<FeedItem> feedList){
         feedListView = (ListView) findViewById(R.id.list_pic_feed);
 
-        testList1 = new ArrayList<>();
-        createTestArrayList(testList1);
-
-        FeedListAdapter feedAdapter = new FeedListAdapter(testList1);
+        FeedListAdapter feedAdapter = new FeedListAdapter(feedList);
 
         feedListView.setAdapter(feedAdapter);
 
     }
 
+    // inner class creating custom list adapter for the feed list.
+    // called by setupFeedListView
     class FeedListAdapter extends BaseAdapter {
 
         private ArrayList<FeedItem> feedItemsList;
 
         public FeedListAdapter(ArrayList<FeedItem> feedItemsList){
             super();
-
             this.feedItemsList = feedItemsList;
-
         }
-
         @Override
         public int getCount() {
             return feedItemsList.size();
         }
-
         @Override
         public Object getItem(int i) {
             return feedItemsList.get(i);
         }
-
         @Override
         public long getItemId(int i) {
             return 0;
         }
-
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -91,6 +85,7 @@ public class PicFeedActivity extends AppCompatActivity {
         }
     }
 
+    // my test list in lieu of having a read list of FeedItem's
     private ArrayList<FeedItem> createTestArrayList(ArrayList<FeedItem> feedItemList) {
         ArrayList<FeedItem> newList = feedItemList;
 
