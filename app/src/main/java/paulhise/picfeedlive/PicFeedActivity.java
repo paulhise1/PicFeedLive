@@ -11,27 +11,28 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
-
 import java.util.ArrayList;
+
+// setup logout button class, call that on logout button in this class
+// finish createPostButton logic that takes app to CreateContentActivity
+// obtain the list of FeedItem's from firebase realtime database
 
 public class PicFeedActivity extends AppCompatActivity {
 
     private static final String TAG = "PicFeedActivity";
 
-    private Button postButton;
+    private Button createPostButton;
     private Button logoutButton;
-    private ListView feedListView;
-
-    public ArrayList<FeedItem> testList1;
+    private ListView feedListView;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
 
-        //need to give it the ArrayList<FeedItem> that is constructed from all the FeedItem's
-        setupFeedListView();
+        // !!! don't leave null
+        // !!! need to give it the ArrayList<FeedItem> that is constructed from all the FeedItem's
+        setupFeedListView(null);
     }
 
     // method that puts all the FeedItem's into the feedListView
@@ -45,6 +46,7 @@ public class PicFeedActivity extends AppCompatActivity {
     }
 
     // inner class creating custom list adapter for the feed list.
+    // with the getView doing all the heavy lifting of the adapter
     // called by setupFeedListView
     class FeedListAdapter extends BaseAdapter {
 
@@ -85,23 +87,23 @@ public class PicFeedActivity extends AppCompatActivity {
         }
     }
 
-    // my test list in lieu of having a read list of FeedItem's
-    private ArrayList<FeedItem> createTestArrayList(ArrayList<FeedItem> feedItemList) {
-        ArrayList<FeedItem> newList = feedItemList;
-
-        FeedItem test1 = new FeedItem("test 1", null, null);
-        FeedItem test2 = new FeedItem("test 2", null, null);
-        FeedItem test3 = new FeedItem("test 3", null, null);
-        FeedItem test4 = new FeedItem("test 4", null, null);
-        FeedItem test5 = new FeedItem("test 5", null, null);
-
-        newList.add(test1);
-        newList.add(test2);
-        newList.add(test3);
-        newList.add(test4);
-        newList.add(test5);
-
-        return newList;
-    }
+//    // my test list in lieu of having a read list of FeedItem's
+//    private ArrayList<FeedItem> createTestArrayList(ArrayList<FeedItem> feedItemList) {
+//        ArrayList<FeedItem> newList = feedItemList;
+//
+//        FeedItem test1 = new FeedItem("test 1", null, null);
+//        FeedItem test2 = new FeedItem("test 2", null, null);
+//        FeedItem test3 = new FeedItem("test 3", null, null);
+//        FeedItem test4 = new FeedItem("test 4", null, null);
+//        FeedItem test5 = new FeedItem("test 5", null, null);
+//
+//        newList.add(test1);
+//        newList.add(test2);
+//        newList.add(test3);
+//        newList.add(test4);
+//        newList.add(test5);
+//
+//        return newList;
+//    }
 
 }
