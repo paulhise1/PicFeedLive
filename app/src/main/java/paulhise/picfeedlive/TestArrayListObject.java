@@ -11,10 +11,12 @@ class TestArrayListObject {
 
     ArrayList<FeedItemObject> feedItemsTestListObject;
 
+    // TestArrayListObject constructor
     public TestArrayListObject(){
         this.feedItemsTestListObject = createTestArrayList();
     }
 
+    // method that creates 5 test FeedItemObject objects and put them in an ArrayList of FeedItemObject
     private ArrayList<FeedItemObject> createTestArrayList() {
 
         ArrayList<FeedItemObject> newList = new ArrayList<>();

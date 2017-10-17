@@ -16,6 +16,7 @@ class FeedItemObject {
 
     // FeedItemObject Constructor
     public FeedItemObject(String s, Bitmap bmUser, Bitmap bmFeedItem){
+
         this.userBitmap = bmUser;
         this.feedItemText = s;
         this.feedItemBitmap = bmFeedItem;

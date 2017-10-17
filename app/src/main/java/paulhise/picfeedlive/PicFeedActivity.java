@@ -1,5 +1,6 @@
 package paulhise.picfeedlive;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,27 +14,49 @@ import java.util.ArrayList;
 
 // setup logout button class, call that on logout button in this class
 // finish createPostButton logic that takes app to CreateContentActivity
+
 // obtain the list of FeedItemObject's from firebase realtime database
 
 public class PicFeedActivity extends AppCompatActivity {
 
     private static final String TAG = "PicFeedActivity";
 
-    private Button createPostButton;
-    private Button logoutButton;
+    private Button mCreatePostButton;
+    private Button mLogoutButton;
+    private Intent mGoToCreateContentActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
 
+        // initializing member variables
+        mCreatePostButton = (Button) findViewById(R.id.button_post);
+        mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
+
         // !!! right now using TestArrayListObject class to test the listview
         TestArrayListObject testList;
         testList = new TestArrayListObject();
+
+        // calling class methods
         setupFeedListView(testList.feedItemsTestListObject);
+        attachOnClickListeners();
+
     }
 
-    // method that puts all the FeedItemObject's into the feedListView
+    private void attachOnClickListeners(){
+
+        mCreatePostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(mGoToCreateContentActivity);
+            }
+        });
+
+
+    }
+
+    // method that puts all the FeedItemObject's into the feedListView using the custom adapter class FeedListAdapter
     private void setupFeedListView(ArrayList<FeedItemObject> feedList){
         ListView feedListView;
 
@@ -44,6 +67,7 @@ public class PicFeedActivity extends AppCompatActivity {
         feedListView.setAdapter(feedAdapter);
 
     }
+
 
     // inner class creating custom list adapter for the feed list.
     // with the getView doing all the heavy lifting of the adapter
