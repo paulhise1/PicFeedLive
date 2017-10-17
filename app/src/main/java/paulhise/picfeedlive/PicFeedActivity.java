@@ -2,10 +2,8 @@ package paulhise.picfeedlive;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,7 +13,7 @@ import java.util.ArrayList;
 
 // setup logout button class, call that on logout button in this class
 // finish createPostButton logic that takes app to CreateContentActivity
-// obtain the list of FeedItem's from firebase realtime database
+// obtain the list of FeedItemObject's from firebase realtime database
 
 public class PicFeedActivity extends AppCompatActivity {
 
@@ -23,20 +21,22 @@ public class PicFeedActivity extends AppCompatActivity {
 
     private Button createPostButton;
     private Button logoutButton;
-    private ListView feedListView;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
 
-        // !!! don't leave null
-        // !!! need to give it the ArrayList<FeedItem> that is constructed from all the FeedItem's
-        setupFeedListView(null);
+        // !!! right now using TestArrayListObject class to test the listview
+        TestArrayListObject testList;
+        testList = new TestArrayListObject();
+        setupFeedListView(testList.feedItemsTestListObject);
     }
 
-    // method that puts all the FeedItem's into the feedListView
-    private void setupFeedListView(ArrayList<FeedItem> feedList){
+    // method that puts all the FeedItemObject's into the feedListView
+    private void setupFeedListView(ArrayList<FeedItemObject> feedList){
+        ListView feedListView;
+
         feedListView = (ListView) findViewById(R.id.list_pic_feed);
 
         FeedListAdapter feedAdapter = new FeedListAdapter(feedList);
@@ -50,19 +50,19 @@ public class PicFeedActivity extends AppCompatActivity {
     // called by setupFeedListView
     class FeedListAdapter extends BaseAdapter {
 
-        private ArrayList<FeedItem> feedItemsList;
+        private ArrayList<FeedItemObject> feedItemsListObject;
 
-        public FeedListAdapter(ArrayList<FeedItem> feedItemsList){
+        public FeedListAdapter(ArrayList<FeedItemObject> feedItemsListObject){
             super();
-            this.feedItemsList = feedItemsList;
+            this.feedItemsListObject = feedItemsListObject;
         }
         @Override
         public int getCount() {
-            return feedItemsList.size();
+            return feedItemsListObject.size();
         }
         @Override
         public Object getItem(int i) {
-            return feedItemsList.get(i);
+            return feedItemsListObject.get(i);
         }
         @Override
         public long getItemId(int i) {
@@ -71,7 +71,7 @@ public class PicFeedActivity extends AppCompatActivity {
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
-            FeedItem currentItem = feedItemsList.get(i);
+            FeedItemObject currentItem = feedItemsListObject.get(i);
 
             view = getLayoutInflater().inflate(R.layout.picfeed_list_item_view, null);
 
@@ -86,24 +86,5 @@ public class PicFeedActivity extends AppCompatActivity {
             return view;
         }
     }
-
-//    // my test list in lieu of having a read list of FeedItem's
-//    private ArrayList<FeedItem> createTestArrayList(ArrayList<FeedItem> feedItemList) {
-//        ArrayList<FeedItem> newList = feedItemList;
-//
-//        FeedItem test1 = new FeedItem("test 1", null, null);
-//        FeedItem test2 = new FeedItem("test 2", null, null);
-//        FeedItem test3 = new FeedItem("test 3", null, null);
-//        FeedItem test4 = new FeedItem("test 4", null, null);
-//        FeedItem test5 = new FeedItem("test 5", null, null);
-//
-//        newList.add(test1);
-//        newList.add(test2);
-//        newList.add(test3);
-//        newList.add(test4);
-//        newList.add(test5);
-//
-//        return newList;
-//    }
 
 }
