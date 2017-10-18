@@ -1,8 +1,11 @@
 package paulhise.picfeedlive;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,6 +15,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import static paulhise.picfeedlive.LoginActivity.MyPREFERENCES;
 
 // setup logout button class, call that on logout button in this class
 
@@ -25,6 +30,7 @@ public class PicFeedActivity extends AppCompatActivity {
     private Button mLogoutButton;
     private Intent mGoToCreateContentActivity;
     private Intent mGoToLoginActivity;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +42,11 @@ public class PicFeedActivity extends AppCompatActivity {
         mLogoutButton = (Button) findViewById(R.id.button_logout);
         mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
         mGoToLoginActivity = new Intent(this, LoginActivity.class);
+
+        SharedPreferences mSharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+
+
+        Log.d(TAG, "onCreate: checking shared prefs - " + MyPREFERENCES.toString());
 
         // !!! right now using TestArrayListObject class to test the listview
         TestArrayListObject testList;
@@ -60,6 +71,7 @@ public class PicFeedActivity extends AppCompatActivity {
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                clearSharedPreferences();
                 startActivity(mGoToLoginActivity);
             }
         });
@@ -122,6 +134,21 @@ public class PicFeedActivity extends AppCompatActivity {
 
             return view;
         }
+    }
+
+    private void clearSharedPreferences(){
+
+        // establishing instance of sharedpreferences to clear username
+        SharedPreferences mSharedPreferences;
+        mSharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+        // clears username text from sharedPreferences
+        String clearUserName  = null;
+
+        // allows edit of sharedprefrences
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
+        editor.putString(MyPREFERENCES, null);
+        editor.apply();
     }
 
 }
