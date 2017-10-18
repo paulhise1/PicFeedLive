@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 // create logic for the sign in button that will allow users to resign in
+// will need to make a user field in firebase that will display to the users in a list and allow them to select thier previously entered username.
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -56,7 +57,8 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 // detect if the user presses [enter]
                 if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    dismissKeyboard();
+                    saveUsername();
+                    startActivity(mGoToPicFeedActivity);
                     return true;
                 }
                 return false;
