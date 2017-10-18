@@ -37,25 +37,29 @@ public class PicFeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
 
-        // initializing member variables
-        mCreatePostButton = (Button) findViewById(R.id.button_create_post);
-        mLogoutButton = (Button) findViewById(R.id.button_logout);
-        mUserNameText = (TextView) findViewById(R.id.textView_username);
-        mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
-        mGoToLoginActivity = new Intent(this, LoginActivity.class);
-
         // !!! right now using TestArrayListObject class to test the listview
         TestArrayListObject testList;
         testList = new TestArrayListObject();
 
         // calling class methods
+        setupView();
         setUserName();
         setupFeedListView(testList.feedItemsTestListObject);
         attachOnClickListeners();
 
     }
 
+    private void setupView(){
+        mCreatePostButton = (Button) findViewById(R.id.button_create_post);
+        mLogoutButton = (Button) findViewById(R.id.button_logout);
+        mUserNameText = (TextView) findViewById(R.id.textView_username);
+
+    }
     private void attachOnClickListeners() {
+
+        mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
+        mGoToLoginActivity = new Intent(this, LoginActivity.class);
+
 
         mCreatePostButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +72,7 @@ public class PicFeedActivity extends AppCompatActivity {
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clearSharedPreferences();
+
                 startActivity(mGoToLoginActivity);
             }
         });
@@ -135,19 +139,6 @@ public class PicFeedActivity extends AppCompatActivity {
         mUserNameDisplayText= MySharedPreferences.getUserName(this);
         mUserNameText.setText(mUserNameDisplayText);
 
-    }
-    private void clearSharedPreferences(){
-
-        // establishing instance of sharedpreferences to clear username
-        SharedPreferences mSharedPreferences;
-        mSharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
-        // allows edit of sharedprefrences
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-
-        // clears MyPREFERENCES
-        editor.putString(MyPREFERENCES, null);
-        editor.apply();
     }
 
 }
