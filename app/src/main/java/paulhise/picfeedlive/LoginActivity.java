@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -12,21 +13,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-// create login button that will save the user's name and move activity to PicFeedActivity
-// create a sign in button that will allow users to resign in
+// create logic for the sign in button that will allow users to resign in
 
 public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity: ";
 
     // declaring member variables
-    private Button mSignInButton;
-    private Button mCreateUserButton;
     private EditText mUserNameCreationInput;
     private Intent mGoToPicFeedActivity;
 
     // initializing public variables for establishing username saved as a sharedpreference
-    public static final String MyPREFERENCES = "userNameKey";
+    public static final String MyPREFERENCES = "userName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +39,15 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setUpView(){
 
-        // initiailizing member variables for setUpView method
+        Button mSignInButton;
+        Button mCreateUserButton;
+
+        // setting views
         mSignInButton = (Button) findViewById(R.id.button_user_sign_in);
         mCreateUserButton = (Button) findViewById(R.id.button_create_user_login);
         mUserNameCreationInput = (EditText) findViewById(R.id.edit_text_username_input);
+
+        // initializing variables
         mGoToPicFeedActivity = new Intent(this, PicFeedActivity.class);
 
         // actionListener for EditText field where users put there new user name
@@ -87,17 +90,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void editSharedPreferences(){
-        // establishing sharedpreferences to give username to
-        SharedPreferences mSharedPreferences;
-        mSharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
         // grabs username text from EditText field
         String userName  = mUserNameCreationInput.getText().toString();
 
-        // allows edit of sharedprefrences
-        SharedPreferences.Editor editor = mSharedPreferences.edit();
-        editor.putString(MyPREFERENCES, userName);
-        editor.apply();
+        MySharedPreferences.setUserName(this, userName);
     }
 
     private void dismissKeyboard(){

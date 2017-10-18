@@ -18,19 +18,19 @@ import java.util.ArrayList;
 
 import static paulhise.picfeedlive.LoginActivity.MyPREFERENCES;
 
-// setup logout button class, call that on logout button in this class
-
 // obtain the list of FeedItemObject's from firebase realtime database
 
 public class PicFeedActivity extends AppCompatActivity {
 
     private static final String TAG = "PicFeedActivity";
 
+    private TextView mUserNameText;
     private Button mCreatePostButton;
     private Button mLogoutButton;
     private Intent mGoToCreateContentActivity;
     private Intent mGoToLoginActivity;
     private SharedPreferences mSharedPreferences;
+    private String mUserNameDisplayText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,19 +40,16 @@ public class PicFeedActivity extends AppCompatActivity {
         // initializing member variables
         mCreatePostButton = (Button) findViewById(R.id.button_create_post);
         mLogoutButton = (Button) findViewById(R.id.button_logout);
+        mUserNameText = (TextView) findViewById(R.id.textView_username);
         mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
         mGoToLoginActivity = new Intent(this, LoginActivity.class);
-
-        SharedPreferences mSharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
-
-
-        Log.d(TAG, "onCreate: checking shared prefs - " + MyPREFERENCES.toString());
 
         // !!! right now using TestArrayListObject class to test the listview
         TestArrayListObject testList;
         testList = new TestArrayListObject();
 
         // calling class methods
+        setUserName();
         setupFeedListView(testList.feedItemsTestListObject);
         attachOnClickListeners();
 
@@ -67,7 +64,7 @@ public class PicFeedActivity extends AppCompatActivity {
             }
         });
 
-        // !! need to define logic that will log the user out before moving them back to the LoginActivity
+        // log the user out before moving them back to the LoginActivity
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,9 +87,7 @@ public class PicFeedActivity extends AppCompatActivity {
     }
 
 
-    // inner class creating custom list adapter for the feed list.
-    // with the getView doing all the heavy lifting of the adapter
-    // called by setupFeedListView
+    // inner class creating custom list adapter for the feed list used in setupFeedListView
     class FeedListAdapter extends BaseAdapter {
 
         private ArrayList<FeedItemObject> feedItemsListObject;
@@ -136,17 +131,21 @@ public class PicFeedActivity extends AppCompatActivity {
         }
     }
 
+    private void setUserName(){
+        mUserNameDisplayText= MySharedPreferences.getUserName(this);
+        mUserNameText.setText(mUserNameDisplayText);
+
+    }
     private void clearSharedPreferences(){
 
         // establishing instance of sharedpreferences to clear username
         SharedPreferences mSharedPreferences;
         mSharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
 
-        // clears username text from sharedPreferences
-        String clearUserName  = null;
-
         // allows edit of sharedprefrences
         SharedPreferences.Editor editor = mSharedPreferences.edit();
+
+        // clears MyPREFERENCES
         editor.putString(MyPREFERENCES, null);
         editor.apply();
     }

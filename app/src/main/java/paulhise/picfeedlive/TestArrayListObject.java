@@ -19,6 +19,7 @@ class TestArrayListObject {
     // method that creates 5 test FeedItemObject objects and put them in an ArrayList of FeedItemObject
     private ArrayList<FeedItemObject> createTestArrayList() {
 
+
         ArrayList<FeedItemObject> newList = new ArrayList<>();
 
         FeedItemObject test1 = new FeedItemObject("test 1", null, null);
