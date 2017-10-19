@@ -20,7 +20,7 @@ import butterknife.OnClick;
 import static paulhise.picfeedlive.MySharedPreferences.USERNAMEPREF;
 
 
-
+// TODO NOTES:
 // obtain the list of FeedItemObject's from firebase realtime database
 
 public class PicFeedActivity extends AppCompatActivity {
@@ -30,9 +30,10 @@ public class PicFeedActivity extends AppCompatActivity {
     @BindView(R.id.textView_username) TextView mUserNameTextView;
     @BindView(R.id.button_create_post) Button mCreatePostButton;
     @BindView(R.id.button_logout) Button mLogoutButton;
+    @BindView(R.id.list_pic_feed) ListView feedListView;
 
-    Intent mGoToCreateContentActivity;
-    Intent mGoToLoginActivity;;
+    Intent mMoveToCreateContent;
+    Intent mMoveToLogin;
     String mUserNameString;
 
     @Override
@@ -40,50 +41,39 @@ public class PicFeedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
 
-        establishIntents();
+        initializer();
+    }
 
-        // !!! right now using TestArrayListObject class to test the listview
+    //
+    // class methods //
+
+    // OnCreate methods and variable initializers
+    private void initializer() {
+        mMoveToCreateContent = new Intent(this, CreateContentActivity.class);
+        mMoveToLogin = new Intent(this, LoginActivity.class);
+
+        ButterKnife.bind(this);
+        setUserName();
+
+        // todo giving listview a test, will need to delete this
         TestArrayListObject testList;
         testList = new TestArrayListObject();
 
-        // calling class methods
-        ButterKnife.bind(this);
-        setUserName();
-        setupFeedListView(testList.feedItemsTestListObject);
-
+        setFeedListView(testList.feedItemsTestListObject);
     }
 
-    private void establishIntents(){
-        mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
-        mGoToLoginActivity = new Intent(this, LoginActivity.class);
+    private void setUserName(){
+        mUserNameString = MySharedPreferences.getUserName(this);
+        mUserNameTextView.setText(mUserNameString);
     }
 
-    // butterknifed methods establishing buttons
-
-    @OnClick(R.id.button_create_post)
-    public void moveToCreateContentActivity(){
-        startActivity(mGoToCreateContentActivity);
-    }
-
-    @OnClick(R.id.button_logout)
-    public void moveToLoginActivity(){
-        startActivity(mGoToLoginActivity);
-    }
-
-    // method that puts all the FeedItemObject's into the feedListView using the custom adapter class FeedListAdapter
-    private void setupFeedListView(ArrayList<FeedItemObject> feedList) {
-        ListView feedListView;
-
-        feedListView = (ListView) findViewById(R.id.list_pic_feed);
-
+    // Implements custom FeedListAdapter and
+    private void setFeedListView(ArrayList<FeedItemObject> feedList) {
         FeedListAdapter feedAdapter = new FeedListAdapter(feedList);
-
         feedListView.setAdapter(feedAdapter);
-
     }
 
-
-    // inner class creating custo  m list adapter for the feed list used in setupFeedListView
+    // inner class creating custom list adapter for the feed listview used in setupFeedListView
     class FeedListAdapter extends BaseAdapter {
 
         private ArrayList<FeedItemObject> feedItemsListObject;
@@ -127,9 +117,17 @@ public class PicFeedActivity extends AppCompatActivity {
         }
     }
 
-    private void setUserName(){
-        mUserNameString = MySharedPreferences.getUserName(this);
-        mUserNameTextView.setText(mUserNameString);
+    //
+    // butterknifed buttons //
+
+    @OnClick(R.id.button_create_post)
+    public void moveToCreateContentActivity(){
+        startActivity(mMoveToCreateContent);
+    }
+
+    @OnClick(R.id.button_logout)
+    public void moveToLoginActivity(){
+        startActivity(mMoveToLogin);
     }
 
 }

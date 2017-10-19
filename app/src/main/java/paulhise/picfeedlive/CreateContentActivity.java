@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// TODO NOTES:
 // rewrite caption button needs logic
 // camera request button needs to make camera request for result
 // gallery request button needs to make gallery request for result
@@ -40,23 +41,27 @@ public class CreateContentActivity extends AppCompatActivity {
 
     String mUserNameString;
     String mCaptionPreviewString;
-    Intent mGoToPicFeedActivity;
-    Intent mGoToLoginActivity;
-
+    Intent mMoveToPicFeed;
+    Intent mMoveToLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_content);
 
-        ButterKnife.bind(this);
-        setUserName();
-        establishIntents();
+        initializer();
     }
 
     //
-    //
-    //helper methods
+    // class methods //
+
+    // OnCreate methods and variable initializers
+    private void initializer() {
+        ButterKnife.bind(this);
+        setUserName();
+        mMoveToPicFeed = new Intent(this, PicFeedActivity.class);
+        mMoveToLogin = new Intent(this, LoginActivity.class);
+    }
 
     private void setUserName(){
         mUserNameString = MySharedPreferences.getUserName(this);
@@ -64,7 +69,7 @@ public class CreateContentActivity extends AppCompatActivity {
     }
 
     private void editCaption(){
-
+        // Text field is invisible until picture is present to caption
         mCaptionEditText.setVisibility(View.VISIBLE);
 
         // actionListener for EditText field where users put there new user name
@@ -74,10 +79,10 @@ public class CreateContentActivity extends AppCompatActivity {
                 // detect if the user presses [enter]
                 if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     mCaptionPreviewString = mCaptionEditText.getText().toString();
-                    if (mCaptionPreviewString != "") {
+                    if (!isEmpty(mCaptionPreviewString)) {
                         mCaptionPreviewTextView.setText(mCaptionPreviewString);
-                        mCaptionEditText.setText("");
-                        mCaptionEditText.setVisibility(View.INVISIBLE);
+                        clearEditTextField();
+                        return true;
                     }
                     return true;
                 }
@@ -86,22 +91,26 @@ public class CreateContentActivity extends AppCompatActivity {
         });
     }
 
-    private void establishIntents(){
-        mGoToPicFeedActivity = new Intent(this, PicFeedActivity.class);
-        mGoToLoginActivity = new Intent(this, LoginActivity.class);
+    private void clearEditTextField(){
+        mCaptionEditText.setText("");
+        mCaptionEditText.setVisibility(View.INVISIBLE);
     }
 
     private void moveToPicFeed(){
-        startActivity(mGoToPicFeedActivity);
+        startActivity(mMoveToPicFeed);
     }
 
     private void moveToLogin(){
-        startActivity(mGoToLoginActivity);
+        startActivity(mMoveToLogin);
+    }
+
+    private boolean isEmpty(String string) {
+        int stringLength = string.trim().length();
+        return (stringLength <= 0);
     }
 
     //
-    //
-    // setup butterknife listeners for the buttons
+    // butterknifed buttons //
 
     @OnClick(R.id.button_cancel_post)
     public void pressedCancelPost(){
@@ -127,7 +136,7 @@ public class CreateContentActivity extends AppCompatActivity {
 
 //    @OnClick(R.id.button_create_post)
 //    public void pressedShareThisPost(){
-//        //need to write post to firebase logic
+//        todo need to write post to firebase logic
 //
 //    }
 
