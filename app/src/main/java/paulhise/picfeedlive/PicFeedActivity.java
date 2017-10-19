@@ -13,14 +13,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import static paulhise.picfeedlive.MySharedPreferences.USERNAMEPREF;
 
-import static paulhise.picfeedlive.LoginActivity.MyPREFERENCES;
+
 
 // obtain the list of FeedItemObject's from firebase realtime database
 
@@ -31,6 +30,7 @@ public class PicFeedActivity extends AppCompatActivity {
     @BindView(R.id.textView_username) TextView mUserNameTextView;
     @BindView(R.id.button_create_post) Button mCreatePostButton;
     @BindView(R.id.button_logout) Button mLogoutButton;
+
     Intent mGoToCreateContentActivity;
     Intent mGoToLoginActivity;;
     String mUserNameString;

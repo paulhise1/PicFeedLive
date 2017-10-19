@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 // create logic for the sign in button that will allow users to resign in
 // will need to make a user field in firebase that will display to the users in a list and allow them to select thier previously entered username.
 
@@ -20,86 +24,82 @@ public class LoginActivity extends AppCompatActivity {
 
     public static final String TAG = "LoginActivity: ";
 
-    // declaring member variables
-    private EditText mUserNameCreationInput;
-    private Intent mGoToPicFeedActivity;
+    @BindView(R.id.button_user_sign_in) Button mSignInButton;
+    @BindView(R.id.button_create_user) Button mCreateUserButton;
+    @BindView(R.id.edit_text_username_input) EditText mUserNameCreationInput;
 
-    // initializing public variables for establishing username saved as a sharedpreference
-    public static final String MyPREFERENCES = "userName";
+    Intent mGoToPicFeedActivity;
+    String mUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // calling class methods
-        setUpView();
-        editSharedPreferences();
+        ButterKnife.bind(this);
+        initializer();
+        listenForEnter();
 
     }
 
-    private void setUpView(){
-
-        Button mSignInButton;
-        Button mCreateUserButton;
-
-        // setting views
-        mSignInButton = (Button) findViewById(R.id.button_user_sign_in);
-        mCreateUserButton = (Button) findViewById(R.id.button_create_user_login);
-        mUserNameCreationInput = (EditText) findViewById(R.id.edit_text_username_input);
-
-        // initializing variables
+    private void initializer() {
         mGoToPicFeedActivity = new Intent(this, PicFeedActivity.class);
+    }
 
+    private void listenForEnter() {
         // actionListener for EditText field where users put there new user name
         mUserNameCreationInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 // detect if the user presses [enter]
                 if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    saveUsername();
-                    startActivity(mGoToPicFeedActivity);
-                    return true;
+                    setUserNamePref();
+                    // checks to see if mUserName is empty.  If it is not Enter key
+                    if (isEmpty(mUserName)) {
+                        return true;
+
+                    } else {
+                        startActivity(mGoToPicFeedActivity);
+                        return true;
+                    }
                 }
                 return false;
             }
         });
-
-        // Button listeners and logic for buttons
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // write logic for mSignInButton
-            }
-        });
-
-        mCreateUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveUsername();
-                startActivity(mGoToPicFeedActivity);
-            }
-        });
     }
 
-    private void saveUsername(){
-        // calls method that will put username in the sharedpreferences
-        editSharedPreferences();
+    private boolean isEmpty(String string) {
+        int stringLength = string.trim().length();
+        return (stringLength <= 0);
+    }
 
-        //dismiss the keyboard from screen
+    //
+    // butterknifed buttons //
+
+    @OnClick(R.id.button_user_sign_in)
+    public void pressedSignIn(){
+
+    }
+
+    @OnClick(R.id.button_create_user)
+    public void pressedCreateAccount() {
+        setUserNamePref();
+        if (!isEmpty(mUserName)) {
+            startActivity(mGoToPicFeedActivity);
+        }
+    }
+    //
+    // helper methods //
+
+    // grabs username text from EditText field
+    private void setUserNamePref() {
+        mUserName = mUserNameCreationInput.getText().toString();
+        MySharedPreferences.setUserName(this, mUserName);
         dismissKeyboard();
-
     }
 
-    private void editSharedPreferences(){
-        // grabs username text from EditText field
-        String userName  = mUserNameCreationInput.getText().toString();
-
-        MySharedPreferences.setUserName(this, userName);
-    }
-
+    // dismisses keyboard from screen
     private void dismissKeyboard(){
-        // dismisses keyboard from screen
         View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
