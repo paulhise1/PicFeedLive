@@ -28,16 +28,14 @@ public class PicFeedActivity extends AppCompatActivity {
 
     private static final String TAG = "PicFeedActivity";
 
-    @BindView(R.id.textView_username) TextView mUserNameText;
+    @BindView(R.id.textView_username) TextView mUserNameTextView;
     @BindView(R.id.button_create_post) Button mCreatePostButton;
     @BindView(R.id.button_logout) Button mLogoutButton;
     Intent mGoToCreateContentActivity;
-    Intent mGoToLoginActivity;
+    Intent mGoToLoginActivity;;
+    String mUserNameString;
 
-    SharedPreferences mSharedPreferences;
-    String mUserNameDisplayText;
-
-    @Override 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
@@ -61,6 +59,7 @@ public class PicFeedActivity extends AppCompatActivity {
     }
 
     // butterknifed methods establishing buttons
+
     @OnClick(R.id.button_create_post)
     public void moveToCreateContentActivity(){
         startActivity(mGoToCreateContentActivity);
@@ -129,9 +128,8 @@ public class PicFeedActivity extends AppCompatActivity {
     }
 
     private void setUserName(){
-        mUserNameDisplayText= MySharedPreferences.getUserName(this);
-        mUserNameText.setText(mUserNameDisplayText);
-
+        mUserNameString = MySharedPreferences.getUserName(this);
+        mUserNameTextView.setText(mUserNameString);
     }
 
 }

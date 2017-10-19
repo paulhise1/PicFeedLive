@@ -1,14 +1,21 @@
 package paulhise.picfeedlive;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 // rewrite caption button needs logic
 // camera request button needs to make camera request for result
@@ -22,37 +29,38 @@ import android.widget.TextView;
 
 public class CreateContentActivity extends AppCompatActivity {
 
+    private static final String TAG = "CreateContentActivity: ";
     public static final int CAMERA_REQUEST = 1;
     public static final int GALLERY_REQUEST = 2;
 
-    private EditText mCaptionEditText;
-    private TextView mCaptionPreviewTextView;
-    private String mCaptionPreviewString = "";
+    @BindView(R.id.edittext_caption) EditText mCaptionEditText;
+    @BindView(R.id.textview_caption_preview) TextView mCaptionPreviewTextView;
+    @BindView(R.id.textView_username) TextView mUserNameTextView;
+    @BindView(R.id.imageview_create) ImageView mImageToPostImageView;
+
+    String mUserNameString;
+    String mCaptionPreviewString;
+    Intent mGoToPicFeedActivity;
+    Intent mGoToLoginActivity;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_content);
 
-        setupView();
-        attachOnClickListeners();
-
+        ButterKnife.bind(this);
+        setUserName();
+        establishIntents();
     }
 
-    private void setupView(){
+    //
+    //
+    //helper methods
 
-        // initializing views
-        TextView mUserNameTextView;
-        ImageView mImageToPostImageView;
-        mUserNameTextView = (TextView) findViewById(R.id.textView_username);
-        mImageToPostImageView = (ImageView) findViewById(R.id.imageview_create);
-        mCaptionEditText = (EditText) findViewById(R.id.edittext_caption);
-        mCaptionPreviewTextView = (TextView) findViewById(R.id.textview_caption_preview);
-
-        // sets username field in top bar
-        mUserNameTextView.setText(MySharedPreferences.getUserName(this));
-
-
+    private void setUserName(){
+        mUserNameString = MySharedPreferences.getUserName(this);
+        mUserNameTextView.setText(mUserNameString);
     }
 
     private void editCaption(){
@@ -71,74 +79,62 @@ public class CreateContentActivity extends AppCompatActivity {
                         mCaptionEditText.setText("");
                         mCaptionEditText.setVisibility(View.INVISIBLE);
                     }
-
                     return true;
                 }
                 return false;
             }
         });
-
-
     }
-    private void attachOnClickListeners() {
 
-        // initialize intents
-        final Intent mGoToPicFeedActivity;
-        final Intent mGoToLoginActivity;
+    private void establishIntents(){
         mGoToPicFeedActivity = new Intent(this, PicFeedActivity.class);
         mGoToLoginActivity = new Intent(this, LoginActivity.class);
-
-        // initialize buttons with their views
-        Button mCancelButton;
-        Button mLogoutButton;
-        Button mCameraRequestButton;
-        Button mGalleryRequestButton;
-        Button mPostButton;
-        mCancelButton = (Button) findViewById(R.id.button_cancel_post);
-        mLogoutButton = (Button) findViewById(R.id.button_logout);
-        mCameraRequestButton = (Button) findViewById(R.id.button_camera_request);
-        mGalleryRequestButton = (Button) findViewById(R.id.button_gallery_request);
-        mPostButton = (Button) findViewById(R.id.button_upload_post);
-
-        // setup onclick listeners for the buttons
-        mCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(mGoToPicFeedActivity);
-            }
-        });
-
-        // log the user out before moving them back to the LoginActivity
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(mGoToLoginActivity);
-            }
-        });
-
-        mCameraRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        mGalleryRequestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editCaption();
-            }
-        });
-
-        mPostButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
+    private void moveToPicFeed(){
+        startActivity(mGoToPicFeedActivity);
+    }
+
+    private void moveToLogin(){
+        startActivity(mGoToLoginActivity);
+    }
+
+    //
+    //
+    // setup butterknife listeners for the buttons
+
+    @OnClick(R.id.button_cancel_post)
+    public void pressedCancelPost(){
+        moveToPicFeed();
+    }
+
+    @OnClick(R.id.button_logout)
+    public void pressedLogout(){
+        moveToLogin();
+    }
+
+    @OnClick(R.id.button_gallery_request)
+    public void pressedPhotoFromGallery(){
+        //need to write gallery request code and delete editCaption
+        editCaption();
+    }
+
+    @OnClick(R.id.button_camera_request)
+    public void pressedPhotoFromCamera(){
+        //need to write camera request logic
+
+    }
+
+//    @OnClick(R.id.button_create_post)
+//    public void pressedShareThisPost(){
+//        //need to write post to firebase logic
+//
+//    }
+
+    @OnClick(R.id.button_rewrite_caption)
+    public void pressedRewriteCaption(){
+        editCaption();
+    }
 
 
 }
