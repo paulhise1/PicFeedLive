@@ -25,8 +25,9 @@ public class CreateContentActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST = 1;
     public static final int GALLERY_REQUEST = 2;
 
-    private String mCaptionString;
+    private EditText mCaptionEditText;
     private TextView mCaptionPreviewTextView;
+    private String mCaptionPreviewString = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class CreateContentActivity extends AppCompatActivity {
         ImageView mImageToPostImageView;
         mUserNameTextView = (TextView) findViewById(R.id.textView_username);
         mImageToPostImageView = (ImageView) findViewById(R.id.imageview_create);
+        mCaptionEditText = (EditText) findViewById(R.id.edittext_caption);
+        mCaptionPreviewTextView = (TextView) findViewById(R.id.textview_caption_preview);
 
         // sets username field in top bar
         mUserNameTextView.setText(MySharedPreferences.getUserName(this));
@@ -54,8 +57,6 @@ public class CreateContentActivity extends AppCompatActivity {
 
     private void editCaption(){
 
-        final EditText mCaptionEditText;
-        mCaptionEditText = (EditText) findViewById(R.id.edittext_caption);
         mCaptionEditText.setVisibility(View.VISIBLE);
 
         // actionListener for EditText field where users put there new user name
@@ -64,8 +65,9 @@ public class CreateContentActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
                 // detect if the user presses [enter]
                 if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    if (mCaptionEditText.getText() != null) {
-                        mCaptionPreviewTextView.setText(mCaptionEditText.getText().toString());
+                    mCaptionPreviewString = mCaptionEditText.getText().toString();
+                    if (mCaptionPreviewString != "") {
+                        mCaptionPreviewTextView.setText(mCaptionPreviewString);
                         mCaptionEditText.setText("");
                         mCaptionEditText.setVisibility(View.INVISIBLE);
                     }
