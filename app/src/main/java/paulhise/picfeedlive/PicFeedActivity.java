@@ -16,6 +16,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static paulhise.picfeedlive.LoginActivity.MyPREFERENCES;
 
 // obtain the list of FeedItemObject's from firebase realtime database
@@ -24,58 +28,47 @@ public class PicFeedActivity extends AppCompatActivity {
 
     private static final String TAG = "PicFeedActivity";
 
-    private TextView mUserNameText;
-    private Button mCreatePostButton;
-    private Button mLogoutButton;
-    private Intent mGoToCreateContentActivity;
-    private Intent mGoToLoginActivity;
-    private SharedPreferences mSharedPreferences;
-    private String mUserNameDisplayText;
+    @BindView(R.id.textView_username) TextView mUserNameText;
+    @BindView(R.id.button_create_post) Button mCreatePostButton;
+    @BindView(R.id.button_logout) Button mLogoutButton;
+    Intent mGoToCreateContentActivity;
+    Intent mGoToLoginActivity;
 
-    @Override
+    SharedPreferences mSharedPreferences;
+    String mUserNameDisplayText;
+
+    @Override 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pic_feed);
+
+        establishIntents();
 
         // !!! right now using TestArrayListObject class to test the listview
         TestArrayListObject testList;
         testList = new TestArrayListObject();
 
         // calling class methods
-        setupView();
+        ButterKnife.bind(this);
         setUserName();
         setupFeedListView(testList.feedItemsTestListObject);
-        attachOnClickListeners();
 
     }
 
-    private void setupView(){
-        mCreatePostButton = (Button) findViewById(R.id.button_create_post);
-        mLogoutButton = (Button) findViewById(R.id.button_logout);
-        mUserNameText = (TextView) findViewById(R.id.textView_username);
-
-    }
-    private void attachOnClickListeners() {
-
+    private void establishIntents(){
         mGoToCreateContentActivity = new Intent(this, CreateContentActivity.class);
         mGoToLoginActivity = new Intent(this, LoginActivity.class);
+    }
 
+    // butterknifed methods establishing buttons
+    @OnClick(R.id.button_create_post)
+    public void moveToCreateContentActivity(){
+        startActivity(mGoToCreateContentActivity);
+    }
 
-        mCreatePostButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(mGoToCreateContentActivity);
-            }
-        });
-
-        // log the user out before moving them back to the LoginActivity
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(mGoToLoginActivity);
-            }
-        });
+    @OnClick(R.id.button_logout)
+    public void moveToLoginActivity(){
+        startActivity(mGoToLoginActivity);
     }
 
     // method that puts all the FeedItemObject's into the feedListView using the custom adapter class FeedListAdapter
@@ -91,7 +84,7 @@ public class PicFeedActivity extends AppCompatActivity {
     }
 
 
-    // inner class creating custom list adapter for the feed list used in setupFeedListView
+    // inner class creating custo  m list adapter for the feed list used in setupFeedListView
     class FeedListAdapter extends BaseAdapter {
 
         private ArrayList<FeedItemObject> feedItemsListObject;
